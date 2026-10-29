@@ -14,60 +14,70 @@
     <div class="novi">Assign · Operations</div>
   </header>
   <main>
-    <h1>Assign the job</h1>
-    <p class="lede">Review the job. Set who is doing it. Copy the block into the calendar. You do not open the card.</p>
     <div id="gate">
-    <label>Ops pin</label><input id="opspin" />
-    <button class="btn" id="opsgo" type="button">Continue</button>
-  </div>
-  <div id="form" hidden>
-  <p class="err" id="err"></p>
-    <div class="station">
-      <div class="kicker">Job #</div>
-      <p class="how" id="jobpreview">Set from ODIN, or made when you copy to calendar.</p>
+      <h1>Assign</h1>
+      <p class="lede">Jobs come in from ODIN. Pick who does each one.</p>
+      <label>Ops pin</label><input id="opspin" type="password" autocomplete="current-password" />
+      <p class="err" id="gateerr"></p>
+      <button class="btn" id="opsgo" type="button">Continue</button>
     </div>
-    <label>Customer</label>
-    <div class="choices" id="ctype">
-      <button type="button" class="chip on" data-v="b2b">B2B</button>
-      <button type="button" class="chip" data-v="b2c">B2C</button>
+
+    <div id="inbox" hidden>
+      <p class="err" id="err"></p>
+      <div class="choices" id="tabs">
+        <button type="button" class="chip on" data-v="unassigned">Needs crew <span id="n-un"></span></button>
+        <button type="button" class="chip" data-v="open">Assigned <span id="n-open"></span></button>
+      </div>
+      <div id="list"></div>
+      <button class="btn ghost" id="refresh" type="button">Refresh</button>
+
+      <div class="group">Testing</div>
+      <div class="row">
+        <button class="btn ghost" id="addtest" type="button">Add 3 test jobs</button>
+        <button class="btn ghost" id="cleartest" type="button">Remove test jobs</button>
+      </div>
+
+      <div class="group">Crew and contractors</div>
+      <p class="lede">This list moves to ODIN once it holds the roster.</p>
+      <div id="people"></div>
+      <div class="choices" id="pkind">
+        <button type="button" class="chip on" data-v="mk">MK crew</button>
+        <button type="button" class="chip" data-v="contractor">Contractor</button>
+      </div>
+      <div class="row">
+        <input id="pname" placeholder="Name or company" />
+        <input id="pphone" placeholder="Lead phone" inputmode="tel" />
+      </div>
+      <button class="btn ghost" id="addp" type="button">Add</button>
     </div>
-    <label id="custlabel">Company</label><input id="cust" placeholder="Dealer, marina, or fleet name" />
-    <label>Site</label><input id="site" placeholder="Marina, lot, or address" />
-    <label>Unit</label><input id="unit" placeholder="Stock #, slip #, year / make" />
-    <label>Work to do</label><input id="work" />
-    <label>Due on site</label><input id="due" type="datetime-local" />
-    <label>Asset</label>
-    <select id="asset"><option>Boat</option><option>Automotive</option><option>RV</option><option>Aircraft</option></select>
-    <label>Who is doing it</label>
-    <div class="choices" id="kind">
-      <button type="button" class="chip on" data-v="mk">MK crew</button>
-      <button type="button" class="chip" data-v="contractor">Contractor</button>
+
+    <div id="detail" hidden>
+      <button class="btn ghost" id="backlist" type="button">Back to jobs</button>
+      <div class="station">
+        <div class="kicker" id="d-num"></div>
+        <p class="how" id="d-cust"></p>
+        <div class="facts" id="d-facts"></div>
+      </div>
+      <p class="err" id="derr"></p>
+      <div id="d-assigned" hidden>
+        <div class="station">
+          <div class="kicker">Assigned to</div>
+          <p class="how" id="d-who"></p>
+          <p class="lede" id="d-odin"></p>
+          <label>Crew link</label>
+          <div class="row"><input id="d-link" readonly /><button class="btn ghost" id="copylink" type="button">Copy</button></div>
+        </div>
+        <button class="btn ghost" id="unassign" type="button">Change who is doing it</button>
+      </div>
+      <div id="d-pick">
+        <div class="group">Who is doing it</div>
+        <div id="picker"></div>
+        <label>Others on the crew (optional)</label>
+        <input id="d-crew" placeholder="Names" />
+        <button class="btn" id="assign" type="button">Assign</button>
+      </div>
     </div>
-    <label id="namelabel">Crew names</label><input id="names" placeholder="People on this job" />
-    <label>Lead</label><input id="lead" placeholder="Lead name" />
-    <label>Lead phone number</label><input id="phone" inputmode="tel" placeholder="This number opens the card" />
-    <label>Who to see</label><input id="see" placeholder="Name and number on site" />
-    <label>Notes</label><textarea id="notes" placeholder="Gate, dock, do not move it"></textarea>
-    <button class="btn" id="make" type="button">Copy to calendar</button>
-    <div class="station" id="out" hidden>
-      <div class="kicker">Paste this in the event</div>
-      <div class="how" id="block" style="white-space:pre-wrap"></div>
-    </div>
-    <div class="group">MK crew</div>
-    <div id="mklist"></div>
-    <div class="row">
-      <input id="mkname" placeholder="Name" />
-      <input id="mkphone" placeholder="Phone" inputmode="tel" />
-    </div>
-    <button class="btn ghost" id="addmk" type="button">Add crew</button>
-    <div class="group">Contractors</div>
-    <div id="colist"></div>
-    <div class="row">
-      <input id="coname" placeholder="Company" />
-      <input id="cophone" placeholder="Lead phone" inputmode="tel" />
-    </div>
-    <button class="btn ghost" id="addco" type="button">Add contractor</button>
-  </div></main>
+  </main>
 </div>
 <script src="/assign.js"></script>
 </body>

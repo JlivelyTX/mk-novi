@@ -42,3 +42,17 @@ textarea { min-height:72px; }
 .person { display:flex; justify-content:space-between; gap:8px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px; font-size:14px; }
 .person button { border:0; background:transparent; color:#8b1e1e; font-weight:700; }
 .wide { max-width:560px; }
+.jobrow, .pick { display:block; width:100%; text-align:left; background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:8px; color:var(--ink); font:inherit; cursor:pointer; }
+.jobrow:active, .pick:active { background:#eef2f6; }
+.jr-top { display:flex; justify-content:space-between; gap:8px; font-size:16px; }
+.jr-num { font-size:12px; color:var(--gold); font-weight:700; letter-spacing:.04em; white-space:nowrap; }
+.jr-line { display:block; font-size:14px; color:var(--muted); margin-top:3px; }
+.jr-due { display:block; font-size:13px; font-weight:700; margin-top:6px; }
+.pick { display:flex; justify-content:space-between; align-items:center; }
+.pick span { color:var(--muted); font-size:14px; }
+.pick.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+.pick.on span { color:#d5dde6; }
+.facts div { font-size:15px; padding:6px 0; border-top:1px solid var(--line); }
+.facts div:first-child { border-top:0; }
+.facts span { display:block; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.person em { font-style:normal; font-size:11px; font-weight:700; color:var(--muted); }
