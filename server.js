@@ -15,6 +15,18 @@ const pool = new Pool({
     : { rejectUnauthorized: false },
 });
 
+
+function opsOk(req) {
+  const need = process.env.OPS_PIN || "";
+  if (!need) return true;
+  return String(req.get("x-ops-pin") || req.body.pin || "") === need;
+}
+function denyOps(req, res) {
+  if (opsOk(req)) return false;
+  res.status(401).json({ error: "Ops pin required." });
+  return true;
+}
+
 function digits(v) {
   return String(v || "").replace(/\D/g, "");
 }
@@ -55,12 +67,14 @@ app.get("/api/health", async (_req, res) => {
   }
 });
 
-app.get("/api/people", async (_req, res) => {
+app.get("/api/people", async (req, res) => {
+  if (denyOps(req, res)) return;
   const { rows } = await pool.query("select id, kind, name, phone from people order by name");
   res.json(rows);
 });
 
 app.post("/api/people", async (req, res) => {
+  if (denyOps(req, res)) return;
   const kind = req.body.kind === "contractor" ? "contractor" : "mk";
   const name = String(req.body.name || "").trim();
   const phone = digits(req.body.phone);
@@ -73,11 +87,13 @@ app.post("/api/people", async (req, res) => {
 });
 
 app.delete("/api/people/:id", async (req, res) => {
+  if (denyOps(req, res)) return;
   await pool.query("delete from people where id = $1", [req.params.id]);
   res.json({ ok: true });
 });
 
 app.post("/api/jobs", async (req, res) => {
+  if (denyOps(req, res)) return;
   const b = req.body || {};
   const jobNumber = String(b.job_number || "").trim();
   const leadName = String(b.lead_name || "").trim();
