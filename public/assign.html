@@ -22,7 +22,19 @@
   </div>
   <div id="form" hidden>
   <p class="err" id="err"></p>
-    <label>Job #</label><input id="job" />
+    <div class="station">
+      <div class="kicker">Job #</div>
+      <p class="how" id="jobpreview">Set from ODIN, or made when you copy to calendar.</p>
+    </div>
+    <label>Customer</label>
+    <div class="choices" id="ctype">
+      <button type="button" class="chip on" data-v="b2b">B2B</button>
+      <button type="button" class="chip" data-v="b2c">B2C</button>
+    </div>
+    <label id="custlabel">Company</label><input id="cust" placeholder="Dealer, marina, or fleet name" />
+    <label>Site</label><input id="site" placeholder="Marina, lot, or address" />
+    <label>Unit</label><input id="unit" placeholder="Stock #, slip #, year / make" />
+    <label>Work to do</label><input id="work" />
     <label>Due on site</label><input id="due" type="datetime-local" />
     <label>Asset</label>
     <select id="asset"><option>Boat</option><option>Automotive</option><option>RV</option><option>Aircraft</option></select>
@@ -34,9 +46,6 @@
     <label id="namelabel">Crew names</label><input id="names" placeholder="People on this job" />
     <label>Lead</label><input id="lead" placeholder="Lead name" />
     <label>Lead phone number</label><input id="phone" inputmode="tel" placeholder="This number opens the card" />
-    <label>Site</label><input id="site" />
-    <label>Unit</label><input id="unit" placeholder="Stock #, slip #, year / make" />
-    <label>Work to do</label><input id="work" />
     <label>Who to see</label><input id="see" placeholder="Name and number on site" />
     <label>Notes</label><textarea id="notes" placeholder="Gate, dock, do not move it"></textarea>
     <button class="btn" id="make" type="button">Copy to calendar</button>
