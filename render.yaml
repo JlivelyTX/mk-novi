@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: mk-novi
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: BASE_URL
+        sync: false
+      - key: OPS_PIN
+        sync: false
