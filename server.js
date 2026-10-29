@@ -27,6 +27,25 @@ function denyOps(req, res) {
   return true;
 }
 
+function jobPrefix(name) {
+  const words = String(name || "").toUpperCase().replace(/[^A-Z0-9 ]/g, " ").split(/\s+/).filter(Boolean);
+  let out = "";
+  for (const w of words) {
+    if (!out) { out = w.slice(0, 12); continue; }
+    if ((out + w).length > 12) break;
+    out += w;
+  }
+  return out || "JOB";
+}
+function yymm() {
+  const p = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", year: "2-digit", month: "2-digit" }).formatToParts(new Date());
+  return p.find(x => x.type === "year").value + p.find(x => x.type === "month").value;
+}
+async function nextJobNumber(name) {
+  const { rows } = await pool.query("select nextval('job_seq') as n");
+  return `${jobPrefix(name)}-${yymm()}-${rows[0].n}`;
+}
+
 function digits(v) {
   return String(v || "").replace(/\D/g, "");
 }
@@ -95,17 +114,24 @@ app.delete("/api/people/:id", async (req, res) => {
 app.post("/api/jobs", async (req, res) => {
   if (denyOps(req, res)) return;
   const b = req.body || {};
-  const jobNumber = String(b.job_number || "").trim();
+  const customerType = b.customer_type === "b2c" ? "b2c" : "b2b";
+  const customerName = String(b.customer_name || "").trim();
   const leadName = String(b.lead_name || "").trim();
   const leadPhone = digits(b.lead_phone);
-  if (!jobNumber || !leadName || leadPhone.length < 10) {
-    return res.status(400).json({ error: "Job #, lead, and a 10-digit lead number are required." });
+  if (!customerName || !leadName || leadPhone.length < 10) {
+    return res.status(400).json({ error: (customerType === "b2c" ? "Customer name" : "Company") + ", lead, and a 10-digit lead number are required." });
   }
   const jobId = id();
+  const given = String(b.job_number || "").trim().slice(0, 40);
+  if (given) {
+    const dup = await pool.query("select 1 from jobs where job_number = $1 limit 1", [given]);
+    if (dup.rows.length) return res.status(409).json({ error: "Job # " + given + " is already assigned." });
+  }
+  const jobNumber = given || (await nextJobNumber(customerName));
   await pool.query(
     `insert into jobs
-      (id, job_number, due, kind, lead_name, lead_phone, company, crew_names, site, unit, work, see_who, notes, asset)
-     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)`,
+      (id, job_number, due, kind, lead_name, lead_phone, company, crew_names, site, unit, work, see_who, notes, asset, customer_type, customer_name)
+     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,
     [
       jobId,
       jobNumber,
@@ -121,10 +147,12 @@ app.post("/api/jobs", async (req, res) => {
       b.see_who || null,
       b.notes || null,
       b.asset || "Boat",
+      customerType,
+      customerName,
     ]
   );
   const base = process.env.BASE_URL || "";
-  res.json({ id: jobId, link: `${base}/?job=${jobId}` });
+  res.json({ id: jobId, job_number: jobNumber, link: `${base}/?job=${jobId}` });
 });
 
 app.get("/api/jobs/:id", async (req, res) => {
@@ -182,6 +210,8 @@ function publicJob(job) {
   return {
     id: job.id,
     job_number: job.job_number,
+    customer_type: job.customer_type,
+    customer_name: job.customer_name,
     due: job.due,
     kind: job.kind,
     lead_name: job.lead_name,
