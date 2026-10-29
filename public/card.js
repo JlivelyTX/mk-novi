@@ -150,6 +150,7 @@ function pageJob(){
   <div class="station"><div class="kicker">${j.kind==="contractor"?"Company":"Crew"}</div><p class="how">${who||j.lead_name}</p></div>
   ${j.kind==="contractor" ? `<label class="field">Who did the work</label><input id="did" value="${state.did||""}" />` : ""}
   <label class="field">Job #</label><input value="${j.job_number||""}" readonly />
+  <label class="field">${j.customer_type==="b2c"?"Customer":"Company"}</label><input value="${j.customer_name||""}" readonly />
   <label class="field">Site</label><input value="${j.site||""}" readonly />
   <label class="field">Unit</label><input value="${j.unit||""}" readonly />
   <label class="field">Work to do</label><input value="${j.work||""}" readonly />
