@@ -1,6 +1,7 @@
 async function unlock(){
   try {
     await api("/api/ops", { method:"POST", body: JSON.stringify({ pin: $("opspin").value }) });
+    sessionStorage.setItem("novi_ops", $("opspin").value || "");
     $("gate").hidden = true;
     $("form").hidden = false;
     loadPeople().catch(e => err("Database is not connected yet. " + e.message));
@@ -10,8 +11,11 @@ document.getElementById("opsgo").onclick = unlock;
 let kind = "mk";
 const $ = (id) => document.getElementById(id);
 function err(t){ $("err").textContent = t || ""; }
+function opsPin(){ return sessionStorage.getItem("novi_ops") || ""; }
 async function api(url, opt){
-  const res = await fetch(url, Object.assign({ headers:{ "Content-Type":"application/json" } }, opt));
+  opt = opt || {};
+  opt.headers = Object.assign({ "Content-Type":"application/json", "x-ops-pin": opsPin() }, opt.headers || {});
+  const res = await fetch(url, opt);
   const data = await res.json().catch(()=>({}));
   if(!res.ok) throw new Error(data.error || "Failed");
   return data;
