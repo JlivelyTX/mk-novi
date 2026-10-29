@@ -145,7 +145,7 @@ function lockPage(){
 }
 function pageJob(){
   const j = state.job;
-  const who = j.kind==="contractor" ? j.company : j.crew_names;
+  const who = j.kind==="contractor" ? j.company : [j.lead_name, j.crew_names].filter(Boolean).join(", ");
   return `<h1>This job</h1><p class="err">${state.err||""}</p>
   <div class="station"><div class="kicker">${j.kind==="contractor"?"Company":"Crew"}</div><p class="how">${who||j.lead_name}</p></div>
   ${j.kind==="contractor" ? `<label class="field">Who did the work</label><input id="did" value="${state.did||""}" />` : ""}
