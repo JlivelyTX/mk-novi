@@ -34,24 +34,29 @@ The app creates its own tables on start. You do not paste the schema by hand.
 
 ## After it is up
 
-- Ops: `https://your-app.onrender.com/assign`
-- Crew link: the app builds it when Ops copies the calendar block
-- Health: `https://your-app.onrender.com/api/health`
+- Ops: `https://mk-novi.onrender.com/assign`
+- Crew: the link ODIN puts in the calendar event
+- Health: `https://mk-novi.onrender.com/api/health`
+- ODIN connection: see `ODIN.md`
 
 ## What this build does
 
-- Assign sets the job, the lead, and the lead’s phone number
-- The lead’s number opens the card
+- Jobs come in from ODIN with their job number, customer, site, unit, and work
+- Assign is Ops' inbox: Needs crew and Assigned. Tap a job, pick the MK crew member or contractor, done
+- NOVI sends ODIN the crew link; ODIN writes it to the calendar event
+- The lead's phone number opens the card
 - Clock starts when they leave the first screen. Back does not restart it
-- One open job. A second phone with the lead’s number takes it over
 - Photos, checklist, look-right, condition, site issue, GPS
 - Score is stored on submit. Bar math is the 25 Sep weights
-- Job record lives in Neon
+- Test jobs button on Assign for trying the flow before ODIN is connected
 
-## What is still stubbed
+## Environment
 
-- ODIN pull and write-back. Needs the field list from Kyle
+- `DATABASE_URL`, `BASE_URL`, `OPS_PIN`
+- `ODIN_KEY` — shared secret for ODIN calls
+- `ODIN_WEBHOOK_URL` — optional, where NOVI posts assignments
+
+## Still to wire
+
+- Job results back to ODIN on submit
 - Drive drop into Shared Drive 03 Ops / NOVI
-- Email to jason@ and matthew@
-
-Those wire after Kyle sends the ODIN and login answers. The app runs without them.
